@@ -57,7 +57,7 @@ consultar(A, B) :-
 %
 % Preguntas
 %
-preguntar(desgastado, bujias) :- write('�Hay alguna buj�a que no est� chispeando?').
+preguntar(desgastado, bujias) :- write('¿Hay alguna buj�a que no esto chispeando?').
 preguntar(malogrado, arranque-del-motor) :- write('�El arranque del motor est� en silencio?').
 preguntar(no-funciona, bomba-del-combustible) :- write('�La bomba de combustible tiene problemas para bombear combustible?').
 preguntar(falta, combustible) :- write('�El medidor de combustible indica que el tanque est� vac�o?').
