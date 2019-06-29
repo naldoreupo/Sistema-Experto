@@ -8,6 +8,7 @@ resource(guepardo, image, image('guepardo.jpg')).
 resource(tigre, image, image('tigre.jpg')).
 resource(pinguino, image, image('pinguino.jpg')).
 resource(albatro, image, image('albatro.jpg')).
+resource(oso_panda, image, image('oso_panda.jpg')).
 
 mostrar_imagen(Pantalla, Imagen) :- new(Figura, figure),
 								 new(Bitmap, bitmap(resource(Imagen),@on)),
@@ -25,77 +26,113 @@ mostrar_imagen_animal(Pantalla, Imagen) :-new(Figura, figure),
 							 
 crea_interfaz_inicio:-
 	new(Menu, dialog('Averigua si el animal se encuentra en peligro de extinción', size(1000,1000))),	
-	mostrar_imagen(Menu, portada),	
+	mostrar_imagen(Menu, portada),		
 	new(L, label(nombre, '')),
-	new(@texto, label(nombre, 'Segun la respuestas dadas tendra su resultado : ',font('times','roman',20))),
-	new(@respl, label(nombre, '',font('times','roman',24))),
+	new(@texto_mostrar_animal, label(nombre, 'Segun la respuestas dadas tendra su resultado ',font('times','roman',26))),
+	new(@texto_mostrar_situacion, label(nombre, ' ',font('times','roman',26))),
+	new(@respl, label(nombre, '',font('times','roman',26))),
+	new(@resp2, label(nombre, '',font('times','roman',26))),
 	new(Salir, button('Salir', and(message(Menu,destroy), message(Menu, free)))),
 	new(@boton_comenzar, button('Comenzar', message(@prolog, boton_comenzares))),
-	new(@boton_extincion, button('En extinción?', message(@prolog, boton_comenzares2))),
-	send(Menu, append(L)), new(@btncarrera, button('¿Animal?')),
+	new(@boton_extincion, button('', message(@prolog, boton_comenzares2))),
     new(@lblExp1, label(nombre,'',font('times','roman',14))),
+	
+	send(Menu, append(L)), new(@btncarrera, button('¿Animal?')),
 	send(Menu,display,L,point(100,20)),
-	send(Menu,display,@boton_comenzar,point(300,500)),
-	send(Menu,display,@boton_extincion,point(450,500)),
-	send(Menu,display,@texto,point(300,300)),
+	send(Menu,display,@texto_mostrar_animal,point(300,200)),
+	send(Menu,display,@respl,point(300,250)),	
+	send(Menu,display,@texto_mostrar_situacion,point(300,300)),
+	send(Menu,display,@resp2,point(300,350)),
+	send(Menu,display,@boton_extincion,point(300,400)),
+	send(Menu,display,@boton_comenzar,point(300,400)),
 	send(Menu,display,Salir,point(900,600)),
-	send(Menu,display,@respl,point(300,350)),
 	send(Menu,open_centered).
 
-animales(guepardo):- 
-	guepardo,!.	
-	
-animales(tigre):- 
-	tigre,!.
-	
+animales(guepardo):- guepardo,!.
+animales(tigre):- tigre,!.	
 animales(pinguino):-pinguino,!.
 animales(albatro):-albatro,!.
-animales('No estoy entrenado para darte ese diagnostico').
+animales(oso_panda):-oso_panda,!.
+animales('No puedo reconocer el animal descrito').
 
 guepardo :-
 	es_guepardo,
+	pregunta('Vive en africa?'),
 	pregunta('Es carnívoro?'),
+	pregunta('Tiene manchas negras en la piel?'),
 	pregunta('Es un animal solitario?'),
-	pregunta('Es mamifero?').
+	pregunta('Es polígamo?').
 
 tigre :-
 	es_tigre,
-	pregunta('Tiene rayas en la piel?'),
-	pregunta('Tiene hambre excesiva?'),
-	pregunta('Tiene perdida de peso inexplicable?').
+	pregunta('Vive en asia?'),
+	pregunta('Tiene rayas negras en la piel?'),
+	pregunta('Es el felino más grande del mundo?').
 
 pinguino :-
 	es_pinguino,
+	pregunta('Vive en todos los continentes?'),
 	pregunta('Es Carnívoro?'),
-	pregunta('Vive en clima frio?'),
 	pregunta('Suele permanecer en grupos ?'),
 	pregunta('Mide 1,20 centímetros de alto?'),
 	pregunta('Pesa unos 40 kg?').
 
 albatro :-
 	es_albatro,
-	pregunta('¿Es un ave?'),
-	pregunta('¿Es un buen volador?'),
-	pregunta('¿color rojizo?'),
-	pregunta('¿Presenta heces de color negro o con sangrado?'),
-	pregunta('¿Tiene náuseas?').
+	pregunta('¿Viven en el hemisferio Sur?'),
+	pregunta('¿Es un ave acuática?'),
+	pregunta('¿Tiene plumaje es blanco?'),
+	pregunta('¿Las alas presentan una gran cantidad de plumas negras?').
+	
+oso_panda :-
+	es_oso_panda,
+	pregunta('¿Es nativo de China?'),
+	pregunta('¿Tiene pelaje negro y blanco?'),
+	pregunta('¿Es un buen trepador?').
+
+es_guepardo:- pregunta("Es el muy veloz?"),!.
+es_tigre:- pregunta("Tiene rayas negras en la piel?"),!.
+es_pinguino:- pregunta('Vive en clima frio?'),!.
+es_albatro:-pregunta('Es un buen volador?'),!.
+es_oso_panda:-pregunta('Su comida favorita es el bambú?'),!.
 
 %Base de datos de extincion
-extincion :-
-	peligro_extincion,
-	pregunta('¿Menos de 500  individuos?'),
-	pregunta('¿Es un ave?').
-	
 
-es_guepardo:- pregunta("Es veloz?"),!.
-es_tigre:- pregunta("come carne?"),!.
-es_pinguino:- pregunta('Tiene plumas?'),!.
-es_albatro:-pregunta('Es un ave?'),!.
+extincion(riesgo_bajo):-riesgo_bajo,!.
+extincion(anemazado):-anemazado,!.
+extincion(en_peligro):-en_peligro,!.
+extincion(extinto):-extinto,!.
+extincion('No puedo determinar la situacion del animal descrito').
+
+riesgo_bajo :-
+	esta_riesgo_bajo,
+	pregunta('En comun encontralo en estado salvaje?'),
+	pregunta('Crecimeinto sin la ayuda del hombre?').
+	
+anemazado :-
+	esta_anemazado,
+	pregunta('Poblacion menor a 5000 individuos? '),
+	pregunta('La actividad humana merma su poblacion?'),
+	pregunta('Pocos en estado salvaje?').
+	
+en_peligro :-
+	esta_en_peligro,
+	pregunta('Poblacion menor a 500 individuos?'),
+	pregunta('Habitat destruido?').
+	
+extinto :-
+	es_extinto,
+	pregunta('Han pasado cincuenta años sin que una haya sido vista?').
+	
+esta_riesgo_bajo:- pregunta("Crecimiento contante de la poblacion?"),!.
+esta_anemazado:- pregunta("Degradacion de su habitat?"),!.
+esta_en_peligro:- pregunta("Solo se puede ver en cautiverio?"),!.
+es_extinto:- pregunta("No se puede encontrar especies?"),!.
 
 :-dynamic si/1,no/1.
 
 preguntar(Problema):-new(Di, dialog('Examen')),
-	new(L2, label(texto,'Responde las siguientes preguntas')),
+	new(L2, label(texto_mostrar_animal,'Responde las siguientes preguntas')),
 	new(La, label(prob,Problema)),
 
 	new(B1,button(si,and(message(Di,return,si)))),
@@ -124,7 +161,7 @@ mostrar_animal(X):-new(@tratam, dialog('Sistema experto', size(500,500))),
                           adivinar_animal(X),
                           send(@tratam, open_centered).
 						  
-adivinar_animal(X):- send(@lblExp1,selection('El animal es:')),
+adivinar_animal(X):- send(@lblExp1,selection('El animal es :')),
                  mostrar_imagen_animal(@tratam,X).
 				 
 						  
@@ -132,25 +169,25 @@ boton_comenzares :-lim,
 	send(@boton_comenzar,free),
 	send(@btncarrera,free),
 	animales(Enter),
-	send(@texto, selection('De acuerdo con sus respuestas,el animal es :')),
+	send(@texto_mostrar_animal, selection('De acuerdo con sus respuestas,el animal es :')),
 	send(@respl, selection(Enter)),	
 	mostrar_animal(Enter),
+	send(@boton_extincion, selection('En extincion?')),
 	limpiar.
 	
-boton_comenzares2 :-lim,
+boton_comenzares2 :-
 	send(@boton_extincion,free),
-	send(@btncarrera,free),
-	animales(Enter),
-	send(@texto, selection('De acuerdo con sus respuestas,el riesgo de extincion es :')),
-	send(@respl, selection(Enter)),
+	extincion(Enter),
+	send(@resp2, selection(Enter)),	
+	send(@texto_mostrar_situacion, selection('La situacion de la especie es : ')),
 	limpiar.
-
 
 lim:- send(@respl, selection('')).
 
 limpiar2:-
-	send(@texto,free),
+	send(@texto_mostrar_animal,free),
 	send(@respl,free),
+	send(@resp2,free),
 	send(@boton_extincion,free),
 	send(@boton_comenzar,free).
 
