@@ -9,11 +9,6 @@ funciona_mal(X) :- necesita(X, Y), funciona_mal(Y).
 funciona_mal(X) :- sintoma(_, X).
 
 
-Animal isa mammal :-
-				Animal has hair;
-				Animal gives milk.
-
-
 necesita(carro, sistema-de-combustible).
 necesita(carro, sistema-de-ignicion).
 necesita(carro, sistema-electrico).
