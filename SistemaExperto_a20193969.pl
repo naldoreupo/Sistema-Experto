@@ -12,7 +12,7 @@ animales(tigre):- tigre,!.
 animales(pinguino):-pinguino,!.
 animales(albatro):-albatro,!.
 animales(oso_panda):-oso_panda,!.
-animales('No puedo reconocer el animal descrito').
+animales('No encontrado').
 
 guepardo :-
 	es_guepardo,
@@ -120,6 +120,7 @@ resource(tigre, image, image('tigre.jpg')).
 resource(pinguino, image, image('pinguino.jpg')).
 resource(albatro, image, image('albatro.jpg')).
 resource(oso_panda, image, image('oso_panda.jpg')).
+resource('No encontrado', image, image('no_encontrado.jpg')).
 
 mostrar_imagen(Pantalla, Imagen) :- new(Figura, figure),
 								 new(Bitmap, bitmap(resource(Imagen),@on)),
