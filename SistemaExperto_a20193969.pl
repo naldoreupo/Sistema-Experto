@@ -3,53 +3,10 @@
 :- pce_image_directory('./imagenes').
 :- dynamic color/2.
 :- encoding(utf8).
-
-resource(portada, image, image('portada.jpg')).
-resource(guepardo, image, image('guepardo.jpg')).
-resource(tigre, image, image('tigre.jpg')).
-resource(pinguino, image, image('pinguino.jpg')).
-resource(albatro, image, image('albatro.jpg')).
-resource(oso_panda, image, image('oso_panda.jpg')).
-
-mostrar_imagen(Pantalla, Imagen) :- new(Figura, figure),
-								 new(Bitmap, bitmap(resource(Imagen),@on)),
-								 send(Bitmap, name, 1),
-								 send(Figura, display, Bitmap),
-								 send(Figura, status, 1),
-								 send(Pantalla, display,Figura,point(100,80)).
-								 
-mostrar_imagen_animal(Pantalla, Imagen) :-new(Figura, figure),
-                                     new(Bitmap, bitmap(resource(Imagen),@on)),
-                                     send(Bitmap, name, 1),
-                                     send(Figura, display, Bitmap),
-                                     send(Figura, status, 1),		
-                                     send(Pantalla, display,Figura,point(20,100)).					 
-							 
-crea_interfaz_inicio:-
-	new(Menu, dialog('Averigua si el animal se encuentra en peligro de extinción', size(1000,1000))),	
-	mostrar_imagen(Menu, portada),		
-	new(L, label(nombre, '')),
-	new(@texto_mostrar_animal, label(nombre, 'Según la respuestas dadas tendra su resultado ',font('times','roman',26))),
-	new(@texto_mostrar_situacion, label(nombre, ' ',font('times','roman',26))),
-	new(@respl, label(nombre, '',font('times','roman',26))),
-	new(@resp2, label(nombre, '',font('times','roman',26))),
-	new(Salir, button('Salir', and(message(Menu,destroy), message(Menu, free)))),
-	new(@boton_comenzar, button('Comenzar', message(@prolog, boton_comenzares))),
-	new(@boton_extincion, button('', message(@prolog, boton_comenzares2))),
-    new(@lblExp1, label(nombre,'',font('times','roman',24))),
-    new(@lblExp2, label(nombre,'',font('times','roman',24))),
 	
-	send(Menu, append(L)), new(@btncarrera, button('¿Animal?')),
-	send(Menu,display,L,point(100,20)),
-	send(Menu,display,@texto_mostrar_animal,point(300,150)),
-	send(Menu,display,@respl,point(300,200)),	
-	send(Menu,display,@texto_mostrar_situacion,point(300,250)),
-	send(Menu,display,@resp2,point(300,300)),
-	send(Menu,display,@boton_extincion,point(300,400)),
-	send(Menu,display,@boton_comenzar,point(300,400)),
-	send(Menu,display,Salir,point(900,600)),
-	send(Menu,open_centered).
+%Bases de conocimientos.
 
+%Base de conocimientos : Animales
 animales(guepardo):- guepardo,!.
 animales(tigre):- tigre,!.	
 animales(pinguino):-pinguino,!.
@@ -97,7 +54,8 @@ es_pinguino:- pregunta('¿Vive en clima frío?'),!.
 es_albatro:-pregunta('¿Es un buen volador?'),!.
 es_oso_panda:-pregunta('¿Su comida favorita es el bambú?'),!.
 
-%Base de datos de extincion
+
+%Base de conocimientos : Animales en extincion
 extincion(riesgo_bajo):-riesgo_bajo,!.
 extincion(anemazado):-anemazado,!.
 extincion(en_peligro):-en_peligro,!.
@@ -128,6 +86,8 @@ esta_anemazado:- pregunta('¿La actividad humana merma su población?'),!.
 esta_en_peligro:- pregunta("¿Solo se puede ver en cautiverio?"),!.
 es_extinto:- pregunta("¿No se puede encontrar especies?"),!.
 
+%Motor de inferencias
+
 :-dynamic si/1,no/1.
 
 preguntar(Problema):-new(Di, dialog('Examen')),
@@ -150,9 +110,57 @@ preguntar(Problema):-new(Di, dialog('Examen')),
 	((Answer==si)->assert(si(Problema)); assert(no(Problema)),fail).
 
 pregunta(S):- (si(S)->true; (no(S)->fail;preguntar(S))).
-limpiar:- retract(si(_)),fail.
-limpiar:- retract(no(_)),fail.
-limpiar.
+
+
+%%Interfaz de usuario
+
+resource(portada, image, image('portada.jpg')).
+resource(guepardo, image, image('guepardo.jpg')).
+resource(tigre, image, image('tigre.jpg')).
+resource(pinguino, image, image('pinguino.jpg')).
+resource(albatro, image, image('albatro.jpg')).
+resource(oso_panda, image, image('oso_panda.jpg')).
+
+mostrar_imagen(Pantalla, Imagen) :- new(Figura, figure),
+								 new(Bitmap, bitmap(resource(Imagen),@on)),
+								 send(Bitmap, name, 1),
+								 send(Figura, display, Bitmap),
+								 send(Figura, status, 1),
+								 send(Pantalla, display,Figura,point(100,80)).
+								 
+mostrar_imagen_animal(Pantalla, Imagen) :-new(Figura, figure),
+                                     new(Bitmap, bitmap(resource(Imagen),@on)),
+                                     send(Bitmap, name, 1),
+                                     send(Figura, display, Bitmap),
+                                     send(Figura, status, 1),		
+                                     send(Pantalla, display,Figura,point(20,100)).	
+
+crea_interfaz_inicio:-
+	new(Menu, dialog('Averigua si el animal se encuentra en peligro de extinción', size(1000,1000))),	
+	mostrar_imagen(Menu, portada),		
+	new(L, label(nombre, '')),
+	new(@texto_mostrar_animal, label(nombre, 'Según la respuestas dadas tendra su resultado ',font('times','roman',26))),
+	new(@texto_mostrar_situacion, label(nombre, ' ',font('times','roman',26))),
+	new(@respl, label(nombre, '',font('times','roman',26))),
+	new(@resp2, label(nombre, '',font('times','roman',26))),
+	new(Salir, button('Salir', and(message(Menu,destroy), message(Menu, free)))),
+	new(@boton_comenzar, button('Comenzar', message(@prolog, boton_comenzares))),
+	new(@boton_extincion, button('', message(@prolog, boton_comenzares2))),
+	new(@boton_limpiar, button('Limpiar', message(@prolog, limpiar2))),
+    new(@lblExp1, label(nombre,'',font('times','roman',24))),
+    new(@lblExp2, label(nombre,'',font('times','roman',24))),
+	
+	send(Menu, append(L)), new(@btncarrera, button('¿Animal?')),
+	send(Menu,display,L,point(100,20)),
+	send(Menu,display,@texto_mostrar_animal,point(300,150)),
+	send(Menu,display,@respl,point(300,200)),	
+	send(Menu,display,@texto_mostrar_situacion,point(300,250)),
+	send(Menu,display,@resp2,point(300,300)),
+	send(Menu,display,@boton_extincion,point(300,400)),
+	send(Menu,display,@boton_comenzar,point(300,400)),
+	send(Menu,display,@boton_limpiar,point(450,400)),
+	send(Menu,display,Salir,point(900,600)),
+	send(Menu,open_centered).
 
 mostrar_animal(X):-new(@tratam, dialog('Sistema experto', size(500,500))),
                           send(@tratam, display,@lblExp1,point(70,10)),
@@ -165,34 +173,37 @@ mostrar_animal(X):-new(@tratam, dialog('Sistema experto', size(500,500))),
 adivinar_animal(X):- 
 				send(@lblExp1,selection('El animal es : ')),
 				send(@lblExp2,selection(X)),
-                mostrar_imagen_animal(@tratam,X).
-				 
+                mostrar_imagen_animal(@tratam,X).				 
 						  
 boton_comenzares :-lim,
-	send(@boton_comenzar,free),
-	send(@btncarrera,free),
 	animales(Enter),
+	mostrar_animal(Enter),
+	send(@boton_comenzar, selection('')),
+	send(@boton_comenzar, size, size(0,0)),
+	send(@boton_extincion, selection('¿En extinción?')),
 	send(@texto_mostrar_animal, selection('De acuerdo con sus respuestas,el animal es :')),
 	send(@respl, selection(Enter)),	
-	mostrar_animal(Enter),
-	send(@boton_extincion, selection('¿En extinción?')),
 	limpiar.
 	
 boton_comenzares2 :-
-	send(@boton_extincion,free),
 	extincion(Enter),
-	send(@resp2, selection(Enter)),	
 	send(@texto_mostrar_situacion, selection('La situación de la especie es : ')),
+	send(@resp2, selection(Enter)),	
 	limpiar.
+	
+limpiar:- retract(si(_)),fail.
+limpiar:- retract(no(_)),fail.
+limpiar.
 
 lim:- send(@respl, selection('')).
 
 limpiar2:-
-	send(@texto_mostrar_animal,free),
-	send(@texto_mostrar_situacion,free),
-	send(@respl,free),
-	send(@resp2,free),
-	send(@boton_extincion,free),
-	send(@boton_comenzar,free).
+	send(@texto_mostrar_animal, selection('')),
+	send(@texto_mostrar_situacion, selection('')),
+	send(@respl,selection('')),
+	send(@resp2,selection('')),
+	send(@boton_extincion,selection('')),
+	send(@boton_comenzar,selection('Comenzar')),
+	crea_interfaz_inicio.
 
 :-crea_interfaz_inicio.
