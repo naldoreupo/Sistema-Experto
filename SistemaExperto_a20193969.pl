@@ -83,7 +83,7 @@ extinto :-
 	
 esta_riesgo_bajo:- pregunta("¿Crecimiento constante de su población?"),!.
 esta_anemazado:- pregunta('¿La actividad humana merma su población?'),!.
-esta_en_peligro:- pregunta("¿Solo se puede ver en cautiverio?"),!.
+esta_en_peligro:- pregunta("¿Muy complicado encontra especies salvajes?"),!.
 es_extinto:- pregunta("¿No se puede encontrar especies?"),!.
 
 %Motor de inferencias
